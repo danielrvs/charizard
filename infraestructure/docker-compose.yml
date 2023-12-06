@@ -1,0 +1,69 @@
+version: '3.9'
+
+networks:
+    wordpress-network:
+        name: wordpress-network
+
+volumes:
+    data:
+    https-portal-data:
+
+services:
+    wordpress:
+        image: wordpress:6.4.1-php8.1-apache
+        container_name: wordpress
+        restart: unless-stopped
+        tty: true
+        ports:
+          - "2943:80"
+          - "2944:443"
+        volumes:
+          - ../app:/var/www/html
+        networks:
+            - wordpress-network
+        depends_on:
+            - db
+        environment:
+            WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+            WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+            WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+            WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    db:
+        image: mysql:8.0.30-debian
+        container_name: db
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "5306:3306"
+        volumes:
+            - ../database:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
+            MYSQL_USER: ${WORDPRESS_DB_USER}
+            MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - wordpress-network
+    https-portal:
+        image: steveltn/https-portal:1
+        ports:
+            - '80:80'
+            - '443:443'
+        restart: unless-stopped
+        depends_on:
+            - wordpress
+            - db
+        environment:
+            DOMAINS: 'wordpress.lvh.me -> http://wordpress:80'
+            STAGE: local
+            WEBSOCKET: true
+        volumes:
+            - https-portal-data:/var/lib/https-portal
+        networks:
+            - wordpress-network
+
+
+
+
