@@ -19,6 +19,7 @@ services:
           - "2944:443"
         volumes:
           - ../app:/var/www/html
+          - ./php.ini:/usr/local/etc/php/conf.d/php-ini-overrides.ini
         networks:
             - wordpress-network
         depends_on:

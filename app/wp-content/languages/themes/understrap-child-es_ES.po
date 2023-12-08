@@ -1,0 +1,6 @@
+# Translation of Themes - Understrap Child, Pokemon Modified in Spanish (Spain)
+
+#. Theme Name of the theme
+#, gp-priority: high
+msgid "Add New"
+msgstr "Añadir nuevo"

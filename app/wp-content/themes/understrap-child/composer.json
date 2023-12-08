@@ -1,0 +1,21 @@
+{
+    "name": "danielrvs/charizard",
+    "description": "Fever Up technical test",
+    "type": "theme",
+    "autoload": {
+        "psr-4": {
+            "Danielrvs\\Charizard\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daniel Rivas"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    }
+}
