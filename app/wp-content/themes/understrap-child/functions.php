@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Understrap Child Theme functions and definitions
  *
@@ -6,55 +7,58 @@
  */
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 
 
 /**
  * Removes the parent themes stylesheet and scripts from inc/enqueue.php
  */
-function understrap_remove_scripts() {
-	wp_dequeue_style( 'understrap-styles' );
-	wp_deregister_style( 'understrap-styles' );
+function understrap_remove_scripts()
+{
+	wp_dequeue_style('understrap-styles');
+	wp_deregister_style('understrap-styles');
 
-	wp_dequeue_script( 'understrap-scripts' );
-	wp_deregister_script( 'understrap-scripts' );
+	wp_dequeue_script('understrap-scripts');
+	wp_deregister_script('understrap-scripts');
 }
-add_action( 'wp_enqueue_scripts', 'understrap_remove_scripts', 20 );
+add_action('wp_enqueue_scripts', 'understrap_remove_scripts', 20);
 
 
 
 /**
  * Enqueue our stylesheet and javascript file
  */
-function theme_enqueue_styles() {
+function theme_enqueue_styles()
+{
 
 	// Get the theme data.
 	$the_theme = wp_get_theme();
 
-	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 	// Grab asset urls.
 	$theme_styles  = "/css/child-theme{$suffix}.css";
 	$theme_scripts = "/js/child-theme{$suffix}.js";
 
-	wp_enqueue_style( 'child-understrap-styles', get_stylesheet_directory_uri() . $theme_styles, array(), $the_theme->get( 'Version' ) );
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'child-understrap-scripts', get_stylesheet_directory_uri() . $theme_scripts, array(), $the_theme->get( 'Version' ), true );
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
+	wp_enqueue_style('child-understrap-styles', get_stylesheet_directory_uri() . $theme_styles, array(), $the_theme->get('Version'));
+	wp_enqueue_script('jquery');
+	wp_enqueue_script('child-understrap-scripts', get_stylesheet_directory_uri() . $theme_scripts, array(), $the_theme->get('Version'), true);
+	if (is_singular() && comments_open() && get_option('thread_comments')) {
+		wp_enqueue_script('comment-reply');
 	}
 }
-add_action( 'wp_enqueue_scripts', 'theme_enqueue_styles' );
+add_action('wp_enqueue_scripts', 'theme_enqueue_styles');
 
 
 
 /**
  * Load the child theme's text domain
  */
-function add_child_theme_textdomain() {
-	load_child_theme_textdomain( 'understrap-child', get_stylesheet_directory() . '/languages' );
+function add_child_theme_textdomain()
+{
+	load_child_theme_textdomain('understrap-child', get_stylesheet_directory() . '/languages');
 }
-add_action( 'after_setup_theme', 'add_child_theme_textdomain' );
+add_action('after_setup_theme', 'add_child_theme_textdomain');
 
 
 
@@ -66,48 +70,29 @@ add_action( 'after_setup_theme', 'add_child_theme_textdomain' );
  *
  * @return string
  */
-function understrap_default_bootstrap_version() {
+function understrap_default_bootstrap_version()
+{
 	return 'bootstrap5';
 }
-add_filter( 'theme_mod_understrap_bootstrap_version', 'understrap_default_bootstrap_version', 20 );
+add_filter('theme_mod_understrap_bootstrap_version', 'understrap_default_bootstrap_version', 20);
 
 
 
 /**
  * Loads javascript for showing customizer warning dialog.
  */
-function understrap_child_customize_controls_js() {
+function understrap_child_customize_controls_js()
+{
 	wp_enqueue_script(
 		'understrap_child_customizer',
 		get_stylesheet_directory_uri() . '/js/customizer-controls.js',
-		array( 'customize-preview' ),
+		array('customize-preview'),
 		'20130508',
 		true
 	);
 }
-add_action( 'customize_controls_enqueue_scripts', 'understrap_child_customize_controls_js' );
+add_action('customize_controls_enqueue_scripts', 'understrap_child_customize_controls_js');
 
-function add_custom_post_type_pokemon() :void {
-	$labels = [
-        'name'               => __('Pokémon', 'understrap-child'),
-        'singular_name'      => __('Pokémon', 'understrap-child'),
-        'add_new'            => __('Add New', 'understrap-child'),
-        'add_new_item'       => __('Add New', 'understrap-child'),
-        'edit_item'          => __('Edit Pokémon', 'understrap-child'),
-        'new_item'           => __('New Pokémon', 'understrap-child'),
-        'view_item'          => __('View Pokémon', 'understrap-child'),
-        'search_items'       => __('Search Pokémon Post', 'understrap-child'),
-        'not_found'          => __('No Pokémon found', 'understrap-child'),
-        'not_found_in_trash' => __('No Pokémon found in trash', 'understrap-child'),
-	];
-	register_post_type('pokemon', [
-			'labels'              => $labels,
-			'public'              => true,
-			'has_archive'         => true,
-			'rewrite'             => array('slug' => 'pokemon'),
-			'supports'            => array('title', 'editor', 'thumbnail', 'excerpt'),
-	]);
-}
+require_once __DIR__ . '/src/CustomPosts/pokemon-custom-post.php';
 
-add_action('init', 'add_custom_post_type_pokemon');
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once __DIR__ . '/vendor/autoload.php';
