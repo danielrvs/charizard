@@ -11,6 +11,8 @@ To load the dev enviroment of this project you need to have Docker installed on 
 You can access through your browser at:
 * https://wordpress.lvh.me
 
+I upload with the repository the database.
+
 ## Access to the instance and install dependencies in Composer
 ```bash
   cd infrastructure
